@@ -1,47 +1,68 @@
-name: CI
+name: Build Android APK with Buildozer
 
 on:
   push:
     branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev
-        pip install --upgrade pip
-        pip install Cython==0.29.36 buildozer
-        - name: Set up JDK 17
+      - name: Set up Java 11
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '11'
 
-      - name: Install Android SDK components
+      - name: Install system dependencies
         run: |
-          # 確保接受 SDK 授權
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3-pip \
+            git \
+            zip \
+            unzip \
+            autoconf \
+            libtool \
+            pkg-config \
+            zlib1g-dev \
+            libncurses5-dev \
+            libncursesw5-dev \
+            libsqlite3-dev \
+            libffi-dev \
+            libssl-dev
+
+      - name: Install Buildozer and Cython
+        run: |
+          pip install --upgrade pip
+          pip install --upgrade buildozer cython
+
+      - name: Install Android SDK & Build-Tools (API 31)
+        run: |
+          # 確保接受 SDK 授權並安裝對應 API 31 的工具
           yes | sdkmanager --licenses || true
-          
-          # 安裝 Buildozer 常需的 SDK 版本（請根據你的 buildozer.spec 調整版本，例如 33 或 34）
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0" || true
 
-    - name: Build with Buildozer
-      run: |
-        buildozer -v android debug
+      - name: Build with Buildozer
+        uses: kivy/build-action@v1
+        with:
+          buildozer_version: master
+          buildozer_command: -v android debug
 
-    - name: Upload APK Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: package
-        path: bin/*.apk
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: bin/*.apk
