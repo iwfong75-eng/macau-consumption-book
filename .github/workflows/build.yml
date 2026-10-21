@@ -19,13 +19,14 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev
+        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev openjdk-17-jdk
         pip install --upgrade pip
         pip install Cython==0.29.36 buildozer
 
     - name: Build with Buildozer
       run: |
-        buildozer -v android debug
+        # 確保 buildozer 有權限自動下載 SDK/NDK 並接受授權
+        yes | buildozer -v android debug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
