@@ -26,7 +26,7 @@ jobs:
     - name: Build with Buildozer
       run: |
         # 確保 buildozer 有權限自動下載 SDK/NDK 並接受授權
-        yes | buildozer -v android debug
+        buildozer -v android debug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
