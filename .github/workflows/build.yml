@@ -51,12 +51,13 @@ jobs:
 
       - name: Install Android SDK & Build-Tools (API 31)
         run: |
-          # 確保接受 SDK 授權並安裝對應 API 31 的工具
           yes | sdkmanager --licenses || true
           sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0" || true
 
+      # 使用正確的 Buildozer Action
       - name: Build with Buildozer
-        uses: kivy/build-action@v1
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
         with:
           buildozer_version: master
           buildozer_command: -v android debug
