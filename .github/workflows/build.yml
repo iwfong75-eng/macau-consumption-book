@@ -16,16 +16,21 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev openjdk-17-jdk
+        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libffi-dev libssl-dev
         pip install --upgrade pip
         pip install Cython==0.29.36 buildozer
 
     - name: Build with Buildozer
       run: |
-        # 確保 buildozer 有權限自動下載 SDK/NDK 並接受授權
         buildozer -v android debug
 
     - name: Upload APK Artifact
