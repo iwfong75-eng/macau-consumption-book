@@ -52,14 +52,14 @@ jobs:
 
     - name: Install Python build tools
       run: |
-        pip install --upgrade pip
+        python -m pip install --upgrade pip
         pip install Cython==0.29.36 buildozer
-        # 強制安裝修復 pip 相容性問題的最新 python-for-android 開發版
+        # 強制升級 python-for-android 至最新開發版，修復 pip 相容性
         pip install --upgrade git+https://github.com/kivy/python-for-android.git@master
 
     - name: Build with Buildozer
       run: |
-        # 清理可能損壞的舊 SDK 快取，確保全新乾淨的工具鏈
+        # 清理舊的快取，確保完全使用 Python 3.10 環境重新構建
         rm -rf ~/.buildozer
         buildozer android debug
 
