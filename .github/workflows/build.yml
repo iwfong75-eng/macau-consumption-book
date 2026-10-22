@@ -54,6 +54,8 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install Cython==0.29.36 buildozer
+        # 強制安裝修復 pip 相容性問題的最新 python-for-android 開發版
+        pip install --upgrade git+https://github.com/kivy/python-for-android.git@master
 
     - name: Build with Buildozer
       run: |
