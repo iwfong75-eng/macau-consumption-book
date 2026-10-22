@@ -59,7 +59,7 @@ jobs:
       run: |
         # 清理可能損壞的舊 SDK 快取，確保全新乾淨的工具鏈
         rm -rf ~/.buildozer
-        buildozer -v android debug
+        buildozer android debug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
