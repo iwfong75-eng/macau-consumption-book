@@ -53,6 +53,8 @@ jobs:
 
     - name: Build with Buildozer
       run: |
+        # 清理可能損壞的舊 SDK 快取，逼迫其重新下載乾淨的工具鏈
+        rm -rf ~/.buildozer
         buildozer -v android debug
 
     - name: Upload APK Artifact
