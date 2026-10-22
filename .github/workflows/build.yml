@@ -22,18 +22,11 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
-        git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config \
-        zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-      
     - name: Install system dependencies
       run: |
         sudo dpkg --add-architecture i386
-        sudo apt update
-        sudo apt install -y \
+        sudo apt-get update
+        sudo apt-get install -y \
           build-essential \
           git \
           zip \
@@ -48,10 +41,13 @@ jobs:
           libbz2-dev \
           libreadline-dev \
           libsqlite3-dev \
+          cmake \
+          libncurses5-dev \
+          libncursesw5-dev \
+          libtinfo6 \
           libc6:i386 \
           libstdc++6:i386 \
           zlib1g:i386
-
 
     - name: Install Python build tools
       run: |
@@ -60,7 +56,7 @@ jobs:
 
     - name: Build with Buildozer
       run: |
-        # 清理可能損壞的舊 SDK 快取，逼迫其重新下載乾淨的工具鏈
+        # 清理可能損壞的舊 SDK 快取，確保全新乾淨的工具鏈
         rm -rf ~/.buildozer
         buildozer -v android debug
 
