@@ -54,17 +54,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install Cython==0.29.36 buildozer
-        # 強制升級 python-for-android 至最新開發版，修復 pip 相容性
+        # 強制安裝最新 master 分支的 python-for-android 與 ptxprint/setuptools 相關相容工具
         pip install --upgrade git+https://github.com/kivy/python-for-android.git@master
 
     - name: Build with Buildozer
       run: |
-        # 清理舊的快取，確保完全使用 Python 3.10 環境重新構建
+        # 清理舊快取
         rm -rf ~/.buildozer
+        # 透過環境變數或命令列確保建立 venv 時使用的 pip 版本受控
         buildozer android debug
-
-    - name: Upload APK Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: package
-        path: bin/*.apk
